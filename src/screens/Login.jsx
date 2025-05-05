@@ -30,7 +30,7 @@ const Login = ({ navigation }) => {
           if (existingUser.length === 0) {
             await usersCollection.create((user) => {
               user.email = email;
-              user.password = password; // Avoid saving plain passwords in production
+              user.password = password; 
             });
           }
         });
