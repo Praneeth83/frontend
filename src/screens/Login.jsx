@@ -2,19 +2,39 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, StyleSheet, Text, SafeAreaView } from 'react-native';
 import axios from 'axios';
 import { CommonActions } from '@react-navigation/native';
+//import { database } from '../database/database'; 
+//import { Q } from '@nozbe/watermelondb';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
-    if (email.trim()===''|| password.trim()===''){ Alert.alert('Invalid', 'Please fill all fileds'); return }
+    if (email.trim() === '' || password.trim() === '') {
+      Alert.alert('Invalid', 'Please fill all fields');
+      return;
+    }
     try {
       const res = await axios.post('http://10.0.2.2:8080/login', {
         email: email,
         password: password,
       });
       if (res.data.token) {
+        /*
+        await database.write(async () => {
+          const usersCollection = database.collections.get('users');
+          const existingUser = await usersCollection
+            .query(Q.where('email', email))
+            .fetch();
+
+          if (existingUser.length === 0) {
+            await usersCollection.create((user) => {
+              user.email = email;
+              user.password = password; // Avoid saving plain passwords in production
+            });
+          }
+        });
+        */
         setEmail('');
         setPassword('');
         navigation.dispatch(
@@ -25,29 +45,30 @@ const Login = ({ navigation }) => {
         );
       }
     } catch (error) {
-     
-      Alert.alert("User not found (or) Invalid credentials", 'Please check your email and password');
+      Alert.alert(
+        'User not found (or) Invalid credentials',
+        'Please check your email and password'
+      );
     }
   };
 
   return (
-   
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Login</Text>
 
-      <TextInput 
+      <TextInput
         style={styles.input}
-        placeholder="Email" 
-        value={email} 
-        onChangeText={setEmail} 
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
       />
-      <TextInput 
+      <TextInput
         style={styles.input}
-        placeholder="Password" 
-        value={password} 
-        onChangeText={setPassword} 
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
         secureTextEntry
       />
 
@@ -56,30 +77,27 @@ const Login = ({ navigation }) => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button 
+        <Button
           title="Go to Signup"
           onPress={() => navigation.navigate('Signup')}
           color="#2196F3"
         />
       </View>
     </SafeAreaView>
-    
   );
 };
 
 const styles = StyleSheet.create({
- 
   container: {
     flex: 1,
     borderRadius: 30,
     justifyContent: 'center',
     paddingHorizontal: 30,
     backgroundColor: '#f1f1f1',
-    elevation: 10, 
-    shadowColor: 'black', 
-    
+    elevation: 10,
+    shadowColor: 'black',
     shadowOpacity: 0.7,
-    shadowRadius:1,
+    shadowRadius: 1,
   },
   title: {
     fontSize: 28,
@@ -94,8 +112,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     fontSize: 16,
-    elevation: 2, 
-    shadowColor: 'black', 
+    elevation: 2,
+    shadowColor: 'black',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,

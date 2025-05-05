@@ -6,8 +6,8 @@ const Signup = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const isValidEmail = (email)=>{
-    const atIndex = email.indexOf('@');
-  if (atIndex === -1 || email.indexOf('@', atIndex + 1) !== -1) {
+    const index = email.indexOf('@');
+  if (index === -1 || email.indexOf('@', index + 1) !== -1) {
     return false;
   }
   const parts = email.split('@');
